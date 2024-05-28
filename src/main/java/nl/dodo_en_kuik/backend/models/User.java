@@ -35,6 +35,18 @@ public class User {
     )
     private Set<Authority> authorities = new HashSet<>();
 
+    @ManyToMany(
+            mappedBy = "users",
+            fetch = FetchType.EAGER
+    )
+    private Set<MovieId> movies = new HashSet<>();
+
+    @ManyToMany(
+            mappedBy =  "users",
+            fetch = FetchType.EAGER
+    )
+    private Set<SeriesId> series = new HashSet<>();
+
     // Methods
     public void addAuthority(Authority authority) {
         this.authorities.add(authority);
