@@ -15,6 +15,7 @@ import nl.dodo_en_kuik.backend.specifications.UserSpecification;
 import org.springframework.stereotype.Service;
 import java.util.*;
 import static nl.dodo_en_kuik.backend.helpers.CopyProperties.copyProperties;
+import static nl.dodo_en_kuik.backend.security.config.SpringSecurityConfig.passwordEncoder;
 
 @Service
 public class UserService {
@@ -33,7 +34,7 @@ public class UserService {
     public User dtoToUser(UserInputDto inputDto) {
         User user = new User();
 
-        user.setUsername(inputDto.getUsername().toLowerCase());
+        user.setUsername(inputDto.getUsername().toUpperCase());
         user.setPassword(passwordEncoder().encode(inputDto.getPassword()));
         user.setEmail(inputDto.getEmail());
 
@@ -67,8 +68,10 @@ public class UserService {
     }
 
     public UserDto getUser(String username) {
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+        String usernameUppercase = username.toUpperCase();
+
+        User user = userRepository.findById(usernameUppercase)
+                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
         return userToDto(user);
     }
@@ -102,10 +105,10 @@ public class UserService {
         boolean emailExists = userRepository.existsByEmailIgnoreCase(inputDto.getEmail());
 
         if (usernameExists && emailExists) {
-            throw new InvalidInputException("Username: " + inputDto.getUsername().toLowerCase() + " and email: "
+            throw new InvalidInputException("Username: " + inputDto.getUsername().toUpperCase() + " and email: "
                     + inputDto.getEmail().toLowerCase() + "are already taken");
         } else if (usernameExists) {
-            throw new InvalidInputException("Username: " + inputDto.getUsername().toLowerCase() + " is already taken");
+            throw new InvalidInputException("Username: " + inputDto.getUsername().toUpperCase() + " is already taken");
         } else if (emailExists) {
             throw new InvalidInputException("Email:" + inputDto.getEmail().toLowerCase() + " is already taken");
         } else {
@@ -117,22 +120,26 @@ public class UserService {
     }
 
     public String deleteUser(String username) {
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+        String usernameUppercase = username.toUpperCase();
+
+        User user = userRepository.findById(usernameUppercase)
+                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
         if (user.getUsername().equalsIgnoreCase("mmesander")) {
-            throw new BadRequestException("Can't remove user: " + user.getUsername());
+            throw new BadRequestException("Can't remove user: " + user.getUsername().toUpperCase());
         }
 
-        userRepository.deleteById(username);
+        userRepository.deleteById(usernameUppercase);
 
-        return "User: " + username + " is deleted";
+        return "User: " + usernameUppercase + " is deleted";
     }
 
     // Relation - Authorities Methods
     public Set<Authority> getUserAuthorities(String username) {
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+        String usernameUppercase = username.toUpperCase();
+
+        User user = userRepository.findById(usernameUppercase)
+                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
         UserDto userDto = userToDto(user);
 
@@ -140,31 +147,37 @@ public class UserService {
     }
 
     public UserDto assignAuthorityToUser(String username, String authority) {
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+        String usernameUppercase = username.toUpperCase();
 
-        Optional<Authority> optionalAuthority = authorityRepository.findAuthoritiesByAuthorityContainsIgnoreCaseAndUsernameIgnoreCase(username, authority);
-        UserDto userDto = null;
+        User user = userRepository.findById(usernameUppercase)
+                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
+
+        Optional<Authority> optionalAuthority = authorityRepository.findAuthoritiesByAuthorityContainsIgnoreCase(authority);
+        UserDto userDto;
 
         if (user != null && optionalAuthority.isPresent()) {
-            user.addAuthority(new Authority(username, authority));
+            user.addAuthority(new Authority(usernameUppercase, authority));
 
             userRepository.save(user);
 
             userDto = userToDto(user);
+        } else {
+            throw new BadRequestException("Authority: " + authority.toUpperCase() + " not found");
         }
 
         return userDto;
     }
 
     public String removeAuthorityFromUser(String username, String authority) {
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+        String usernameUppercase = username.toUpperCase();
+
+        User user = userRepository.findById(usernameUppercase)
+                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
         Authority toRemove = user.getAuthorities().stream()
                 .filter(a -> a.getAuthority().equalsIgnoreCase(authority))
                 .findFirst()
-                .orElseThrow(() -> new InvalidInputException("user: " + username + " does not have authority "
+                .orElseThrow(() -> new InvalidInputException("user: " + usernameUppercase + " does not have authority "
                         + authority.toUpperCase()));
 
         long count = 0;
@@ -190,7 +203,7 @@ public class UserService {
             user.removeAuthority(toRemove);
             userRepository.save(user);
 
-            return "Authority " + authority.toUpperCase() + " is removed from user: " + username;
+            return "Authority " + authority.toUpperCase() + " is removed from user: " + usernameUppercase;
         }
     }
 }

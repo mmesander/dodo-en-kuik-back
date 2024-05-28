@@ -35,7 +35,7 @@ public class AuthenticationController {
     public ResponseEntity<?> createAuthenticationToken(
             @RequestBody AuthenticationRequest authenticationRequest
     ) throws Exception {
-        String username = authenticationRequest.getUsername();
+        String username = authenticationRequest.getUsername().toUpperCase();
         String password = authenticationRequest.getPassword();
 
         try {
