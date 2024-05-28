@@ -15,6 +15,7 @@ import nl.dodo_en_kuik.backend.specifications.UserSpecification;
 import org.springframework.stereotype.Service;
 import java.util.*;
 import static nl.dodo_en_kuik.backend.helpers.CopyProperties.copyProperties;
+import static nl.dodo_en_kuik.backend.security.config.SpringSecurityConfig.passwordEncoder;
 
 @Service
 public class UserService {
