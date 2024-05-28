@@ -146,6 +146,22 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("/{username}/movies")
+    public ResponseEntity<Object> removeMovieIdFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeMovieIdFromUser(username, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
     // ADMIN -- Series Requests
     @PutMapping("/{username}/series")
     public ResponseEntity<Object> assignSeriesIdToUser(
@@ -163,4 +179,19 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("/{username}/series")
+    public ResponseEntity<Object> removeSeriesIdFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeSeriesIdFromUser(username, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
 }
