@@ -34,7 +34,7 @@ public class UserService {
     public User dtoToUser(UserInputDto inputDto) {
         User user = new User();
 
-        user.setUsername(inputDto.getUsername().toLowerCase());
+        user.setUsername(inputDto.getUsername().toUpperCase());
         user.setPassword(passwordEncoder().encode(inputDto.getPassword()));
         user.setEmail(inputDto.getEmail());
 
@@ -68,10 +68,10 @@ public class UserService {
     }
 
     public UserDto getUser(String username) {
-        String usernameLowercase = username.toLowerCase();
+        String usernameUppercase = username.toUpperCase();
 
-        User user = userRepository.findById(usernameLowercase)
-                .orElseThrow(() -> new UsernameNotFoundException(usernameLowercase.toUpperCase()));
+        User user = userRepository.findById(usernameUppercase)
+                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
         return userToDto(user);
     }
@@ -105,10 +105,10 @@ public class UserService {
         boolean emailExists = userRepository.existsByEmailIgnoreCase(inputDto.getEmail());
 
         if (usernameExists && emailExists) {
-            throw new InvalidInputException("Username: " + inputDto.getUsername().toLowerCase() + " and email: "
+            throw new InvalidInputException("Username: " + inputDto.getUsername().toUpperCase() + " and email: "
                     + inputDto.getEmail().toLowerCase() + "are already taken");
         } else if (usernameExists) {
-            throw new InvalidInputException("Username: " + inputDto.getUsername().toLowerCase() + " is already taken");
+            throw new InvalidInputException("Username: " + inputDto.getUsername().toUpperCase() + " is already taken");
         } else if (emailExists) {
             throw new InvalidInputException("Email:" + inputDto.getEmail().toLowerCase() + " is already taken");
         } else {
@@ -120,24 +120,26 @@ public class UserService {
     }
 
     public String deleteUser(String username) {
-        String usernameLowercase = username.toLowerCase();
+        String usernameUppercase = username.toUpperCase();
 
-        User user = userRepository.findById(usernameLowercase)
-                .orElseThrow(() -> new UsernameNotFoundException(usernameLowercase.toUpperCase()));
+        User user = userRepository.findById(usernameUppercase)
+                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
         if (user.getUsername().equalsIgnoreCase("mmesander")) {
             throw new BadRequestException("Can't remove user: " + user.getUsername().toUpperCase());
         }
 
-        userRepository.deleteById(usernameLowercase);
+        userRepository.deleteById(usernameUppercase);
 
-        return "User: " + usernameLowercase.toUpperCase() + " is deleted";
+        return "User: " + usernameUppercase + " is deleted";
     }
 
     // Relation - Authorities Methods
     public Set<Authority> getUserAuthorities(String username) {
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+        String usernameUppercase = username.toUpperCase();
+
+        User user = userRepository.findById(usernameUppercase)
+                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
         UserDto userDto = userToDto(user);
 
@@ -145,8 +147,10 @@ public class UserService {
     }
 
     public UserDto assignAuthorityToUser(String username, String authority) {
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+        String usernameUppercase = username.toUpperCase();
+
+        User user = userRepository.findById(usernameUppercase)
+                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
         Optional<Authority> optionalAuthority = authorityRepository.findAuthoritiesByAuthorityContainsIgnoreCaseAndUsernameIgnoreCase(username, authority);
         UserDto userDto = null;
@@ -163,8 +167,10 @@ public class UserService {
     }
 
     public String removeAuthorityFromUser(String username, String authority) {
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+        String usernameUppercase = username.toUpperCase();
+
+        User user = userRepository.findById(usernameUppercase)
+                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
         Authority toRemove = user.getAuthorities().stream()
                 .filter(a -> a.getAuthority().equalsIgnoreCase(authority))
