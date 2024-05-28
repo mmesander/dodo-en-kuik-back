@@ -68,8 +68,10 @@ public class UserService {
     }
 
     public UserDto getUser(String username) {
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+        String usernameLowercase = username.toLowerCase();
+
+        User user = userRepository.findById(usernameLowercase)
+                .orElseThrow(() -> new UsernameNotFoundException(usernameLowercase.toUpperCase()));
 
         return userToDto(user);
     }
