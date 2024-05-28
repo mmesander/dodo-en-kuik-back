@@ -105,12 +105,11 @@ public class UserService {
         boolean emailExists = userRepository.existsByEmailIgnoreCase(inputDto.getEmail());
 
         if (usernameExists && emailExists) {
-            throw new InvalidInputException("Username: " + inputDto.getUsername().toUpperCase() + " and email: "
-                    + inputDto.getEmail().toLowerCase() + "are already taken");
+            throw new InvalidInputException("Gebruikersnaam en emailadres zijn al in gebruik");
         } else if (usernameExists) {
-            throw new InvalidInputException("Username: " + inputDto.getUsername().toUpperCase() + " is already taken");
+            throw new InvalidInputException("Gebruikersnaam is al in gebruik");
         } else if (emailExists) {
-            throw new InvalidInputException("Email:" + inputDto.getEmail().toLowerCase() + " is already taken");
+            throw new InvalidInputException("Email adres is al in gebruik");
         } else {
             user.addAuthority(new Authority(user.getUsername(), "ROLE_USER"));
             userRepository.save(user);
