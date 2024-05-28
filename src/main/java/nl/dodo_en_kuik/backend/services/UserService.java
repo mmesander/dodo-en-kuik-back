@@ -206,4 +206,74 @@ public class UserService {
             return "Authority " + authority.toUpperCase() + " is removed from user: " + usernameUppercase;
         }
     }
+
+    // Relation - Movies Methods
+    public UserDto assignMovieIdToUser(String username, Long movieId) {
+        String usernameUppercase = username.toUpperCase();
+
+        User user = userRepository.findById(usernameUppercase)
+                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
+
+        if (user.getMovieIds().contains(movieId)) {
+            throw new BadRequestException("Movie with id: " + movieId
+                    + " is already assigned to user: " + usernameUppercase);
+        } else {
+            user.addMovieId(movieId);
+            userRepository.save(user);
+        }
+
+        return userToDto(user);
+    }
+
+    public UserDto removeMovieIdFromUser(String username, Long movieId) {
+        String usernameUppercase = username.toUpperCase();
+
+        User user = userRepository.findById(usernameUppercase)
+                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
+
+        if (!user.getMovieIds().contains(movieId)) {
+            throw new BadRequestException("Series with id: " + movieId
+                    + " is not assigned to user: " + usernameUppercase);
+        } else {
+            user.removeMovieId(movieId);
+            userRepository.save(user);
+        }
+
+        return userToDto(user);
+    }
+
+    // Relation - Series Methods
+    public UserDto assignSeriesIdToUser(String username, Long seriesId) {
+        String usernameUppercase = username.toUpperCase();
+
+        User user = userRepository.findById(usernameUppercase)
+                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
+
+        if (user.getSeriesIds().contains(seriesId)) {
+            throw new BadRequestException("Movie with id: " + seriesId
+                    + " is already assigned to user: " + usernameUppercase);
+        } else {
+            user.addSeriesId(seriesId);
+            userRepository.save(user);
+        }
+
+        return userToDto(user);
+    }
+
+    public UserDto removeSeriesIdFromUser(String username, Long seriesId) {
+        String usernameUppercase = username.toUpperCase();
+
+        User user = userRepository.findById(usernameUppercase)
+                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
+
+        if (!user.getSeriesIds().contains(seriesId)) {
+            throw new BadRequestException("Series with id: " + seriesId
+                    + " is not assigned to user: " + usernameUppercase);
+        } else {
+            user.removeSeriesId(seriesId);
+            userRepository.save(user);
+        }
+
+        return userToDto(user);
+    }
 }

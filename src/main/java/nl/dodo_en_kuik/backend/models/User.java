@@ -35,6 +35,22 @@ public class User {
     )
     private Set<Authority> authorities = new HashSet<>();
 
+    @ElementCollection
+    @CollectionTable(
+            name = "user_movie_ids",
+            joinColumns = @JoinColumn(name = "username")
+    )
+    @Column(name = "movie_id")
+    private Set<Long> movieIds = new HashSet<>();
+
+    @ElementCollection
+    @CollectionTable(
+            name = "user_series_ids",
+            joinColumns = @JoinColumn(name = "username")
+    )
+    @Column(name = "series_id")
+    private Set<Long> seriesIds = new HashSet<>();
+
     // Methods
     public void addAuthority(Authority authority) {
         this.authorities.add(authority);
@@ -42,5 +58,21 @@ public class User {
 
     public void removeAuthority(Authority authority) {
         this.authorities.remove(authority);
+    }
+
+    public void addMovieId(Long movieId) {
+        this.movieIds.add(movieId);
+    }
+
+    public void removeMovieId(Long movieId) {
+        this.movieIds.remove(movieId);
+    }
+
+    public void addSeriesId(Long seriesId) {
+        this.seriesIds.add(seriesId);
+    }
+
+    public void removeSeriesId(Long seriesId) {
+        this.seriesIds.remove(seriesId);
     }
 }

@@ -3,6 +3,7 @@ package nl.dodo_en_kuik.backend.controllers;
 // Imports
 import jakarta.validation.Valid;
 import nl.dodo_en_kuik.backend.dtos.input.AuthorityInputDto;
+import nl.dodo_en_kuik.backend.dtos.input.IdInputDto;
 import nl.dodo_en_kuik.backend.dtos.input.UserInputDto;
 import nl.dodo_en_kuik.backend.dtos.output.UserDto;
 import nl.dodo_en_kuik.backend.exceptions.BadRequestException;
@@ -82,7 +83,7 @@ public class UserController {
         return ResponseEntity.ok().body(confirmation);
     }
 
-    // ADMIN - Authority Requests
+    // ADMIN -- Authority Requests
     @GetMapping(value = "/{username}/authorities")
     public ResponseEntity<Object> getUserAuthorities(
             @PathVariable("username") String username
@@ -125,6 +126,72 @@ public class UserController {
             String confirmation = userService.removeAuthorityFromUser(username, authorityInputDto.getAuthority());
 
             return ResponseEntity.ok().body(confirmation);
+        }
+    }
+
+    // ADMIN -- Movie Requests
+    @PutMapping("/{username}/movies")
+    public ResponseEntity<Object> assignMovieIdToUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.assignMovieIdToUser(username, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/{username}/movies")
+    public ResponseEntity<Object> removeMovieIdFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeMovieIdFromUser(username, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    // ADMIN -- Series Requests
+    @PutMapping("/{username}/series")
+    public ResponseEntity<Object> assignSeriesIdToUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.assignSeriesIdToUser(username, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/{username}/series")
+    public ResponseEntity<Object> removeSeriesIdFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeSeriesIdFromUser(username, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
         }
     }
 }
