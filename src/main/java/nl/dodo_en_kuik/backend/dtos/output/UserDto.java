@@ -19,6 +19,6 @@ public class UserDto implements IdentifiableUsername {
     // Relations
     @JsonSerialize
     private Set<Authority> authorities;
-    private Set<Long> movies;
-    private Set<Long> series;
+    private Set<Long> movieIds;
+    private Set<Long> seriesIds;
 }

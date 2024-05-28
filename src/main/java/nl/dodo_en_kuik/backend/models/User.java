@@ -41,7 +41,7 @@ public class User {
             joinColumns = @JoinColumn(name = "username")
     )
     @Column(name = "movie_id")
-    private Set<Long> movies = new HashSet<>();
+    private Set<Long> movieIds = new HashSet<>();
 
     @ElementCollection
     @CollectionTable(
@@ -49,7 +49,7 @@ public class User {
             joinColumns = @JoinColumn(name = "username")
     )
     @Column(name = "series_id")
-    private Set<Long> series = new HashSet<>();
+    private Set<Long> seriesIds = new HashSet<>();
 
     // Methods
     public void addAuthority(Authority authority) {
