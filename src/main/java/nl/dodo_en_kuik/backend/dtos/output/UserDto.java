@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import nl.dodo_en_kuik.backend.interfaces.IdentifiableUsername;
 import nl.dodo_en_kuik.backend.models.Authority;
+import nl.dodo_en_kuik.backend.models.MovieId;
+
 import java.util.Set;
 
 @Getter
@@ -19,4 +21,6 @@ public class UserDto implements IdentifiableUsername {
     // Relations
     @JsonSerialize
     private Set<Authority> authorities;
+    private Set<MovieIdDto> movies;
+    private Set<SeriesIdDto> series;
 }
