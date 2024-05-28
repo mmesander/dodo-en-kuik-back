@@ -35,17 +35,21 @@ public class User {
     )
     private Set<Authority> authorities = new HashSet<>();
 
-    @ManyToMany(
-            mappedBy = "users",
-            fetch = FetchType.EAGER
+    @ElementCollection
+    @CollectionTable(
+            name = "user_movie_ids",
+            joinColumns = @JoinColumn(name = "username")
     )
-    private Set<MovieId> movies = new HashSet<>();
+    @Column(name = "movie_id")
+    private Set<Long> movies = new HashSet<>();
 
-    @ManyToMany(
-            mappedBy =  "users",
-            fetch = FetchType.EAGER
+    @ElementCollection
+    @CollectionTable(
+            name = "user_series_ids",
+            joinColumns = @JoinColumn(name = "username")
     )
-    private Set<SeriesId> series = new HashSet<>();
+    @Column(name = "series_id")
+    private Set<Long> series = new HashSet<>();
 
     // Methods
     public void addAuthority(Authority authority) {
