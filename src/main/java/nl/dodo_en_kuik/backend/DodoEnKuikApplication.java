@@ -1,4 +1,4 @@
-package nl.dodo_en_kuik;
+package nl.dodo_en_kuik.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
