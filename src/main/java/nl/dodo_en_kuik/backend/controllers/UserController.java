@@ -1,6 +1,7 @@
 package nl.dodo_en_kuik.backend.controllers;
 
 // Imports
+
 import jakarta.validation.Valid;
 import nl.dodo_en_kuik.backend.dtos.input.AuthorityInputDto;
 import nl.dodo_en_kuik.backend.dtos.input.IdInputDto;
@@ -11,11 +12,16 @@ import nl.dodo_en_kuik.backend.exceptions.InvalidInputException;
 import nl.dodo_en_kuik.backend.models.Authority;
 import nl.dodo_en_kuik.backend.services.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+
 import static nl.dodo_en_kuik.backend.helpers.BindingResultHelper.handleBindingResultError;
 import static nl.dodo_en_kuik.backend.helpers.UriBuilder.buildUriWithUsername;
 
@@ -192,6 +198,107 @@ public class UserController {
             UserDto dto = userService.removeSeriesIdFromUser(username, inputDto.getId());
 
             return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    // USER (AUTH) -- CRUD Requests
+    @GetMapping(value = "/auth/{username}")
+    public ResponseEntity<UserDto> getAuthUser(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username.toUpperCase())) {
+            UserDto dto = userService.getUser(username);
+
+            return ResponseEntity.ok().body(dto);
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    // USER (AUTH) -- Movies Requests
+    @PutMapping("/auth/{username}/movies")
+    public ResponseEntity<Object> assignMovieIdToAuthUser(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username.toUpperCase())) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                UserDto dto = userService.assignMovieIdToUser(username, inputDto.getId());
+
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @DeleteMapping("/auth/{username}/movies")
+    public ResponseEntity<Object> removeMovieIdFromAuthUser(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username.toUpperCase())) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                UserDto dto = userService.removeMovieIdFromUser(username, inputDto.getId());
+
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    // USER (AUTH) -- Series Requests
+    @PutMapping("/auth/{username}/series")
+    public ResponseEntity<Object> assignSeriesIdToAuthUser(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username.toUpperCase())) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                UserDto dto = userService.assignSeriesIdToUser(username, inputDto.getId());
+
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @DeleteMapping("/auth/{username}/series")
+    public ResponseEntity<Object> removeSeriesIdFromAuthUser(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username.toUpperCase())) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                UserDto dto = userService.removeSeriesIdFromUser(username, inputDto.getId());
+
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
         }
     }
 }
