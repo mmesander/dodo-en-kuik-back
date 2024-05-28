@@ -152,7 +152,7 @@ public class UserService {
         User user = userRepository.findById(usernameUppercase)
                 .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
-        Optional<Authority> optionalAuthority = authorityRepository.findAuthoritiesByAuthorityContainsIgnoreCaseAndUsernameIgnoreCase(username, authority);
+        Optional<Authority> optionalAuthority = authorityRepository.findAuthoritiesByAuthorityContainsIgnoreCase(authority);
         UserDto userDto = null;
 
         if (user != null && optionalAuthority.isPresent()) {
@@ -161,6 +161,8 @@ public class UserService {
             userRepository.save(user);
 
             userDto = userToDto(user);
+        } else {
+            throw new BadRequestException("Authority: " + authority.toUpperCase() + " not found");
         }
 
         return userDto;
