@@ -59,4 +59,20 @@ public class User {
     public void removeAuthority(Authority authority) {
         this.authorities.remove(authority);
     }
+
+    public void addMovieId(Long movieId) {
+        this.movieIds.add(movieId);
+    }
+
+    public void removeMovieId(Long movieId) {
+        this.movieIds.remove(movieId);
+    }
+
+    public void addSeriesId(Long seriesId) {
+        this.seriesIds.add(seriesId);
+    }
+
+    public void removeSeriesId(Long seriesId) {
+        this.seriesIds.remove(seriesId);
+    }
 }
