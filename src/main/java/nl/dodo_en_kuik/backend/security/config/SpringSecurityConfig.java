@@ -66,7 +66,7 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/users/{username}/**").hasRole("ADMIN")
 
                         .requestMatchers("/authenticated").authenticated()
-                        .requestMatchers("/users/login").permitAll()
+                        .requestMatchers("/users/authenticate").permitAll()
                         .requestMatchers("users/register").permitAll()
                         .anyRequest().denyAll()
                 )
