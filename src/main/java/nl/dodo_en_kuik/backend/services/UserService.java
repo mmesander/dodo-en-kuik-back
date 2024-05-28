@@ -153,10 +153,10 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
         Optional<Authority> optionalAuthority = authorityRepository.findAuthoritiesByAuthorityContainsIgnoreCase(authority);
-        UserDto userDto = null;
+        UserDto userDto;
 
         if (user != null && optionalAuthority.isPresent()) {
-            user.addAuthority(new Authority(username, authority));
+            user.addAuthority(new Authority(usernameUppercase, authority));
 
             userRepository.save(user);
 
@@ -177,7 +177,7 @@ public class UserService {
         Authority toRemove = user.getAuthorities().stream()
                 .filter(a -> a.getAuthority().equalsIgnoreCase(authority))
                 .findFirst()
-                .orElseThrow(() -> new InvalidInputException("user: " + username + " does not have authority "
+                .orElseThrow(() -> new InvalidInputException("user: " + usernameUppercase + " does not have authority "
                         + authority.toUpperCase()));
 
         long count = 0;
@@ -203,7 +203,7 @@ public class UserService {
             user.removeAuthority(toRemove);
             userRepository.save(user);
 
-            return "Authority " + authority.toUpperCase() + " is removed from user: " + username;
+            return "Authority " + authority.toUpperCase() + " is removed from user: " + usernameUppercase;
         }
     }
 }
