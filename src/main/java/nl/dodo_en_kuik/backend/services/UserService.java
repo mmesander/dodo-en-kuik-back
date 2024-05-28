@@ -120,16 +120,18 @@ public class UserService {
     }
 
     public String deleteUser(String username) {
-        User user = userRepository.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+        String usernameLowercase = username.toLowerCase();
+
+        User user = userRepository.findById(usernameLowercase)
+                .orElseThrow(() -> new UsernameNotFoundException(usernameLowercase.toUpperCase()));
 
         if (user.getUsername().equalsIgnoreCase("mmesander")) {
-            throw new BadRequestException("Can't remove user: " + user.getUsername());
+            throw new BadRequestException("Can't remove user: " + user.getUsername().toUpperCase());
         }
 
-        userRepository.deleteById(username);
+        userRepository.deleteById(usernameLowercase);
 
-        return "User: " + username + " is deleted";
+        return "User: " + usernameLowercase.toUpperCase() + " is deleted";
     }
 
     // Relation - Authorities Methods
