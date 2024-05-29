@@ -264,7 +264,7 @@ public class UserService {
         User user = userRepository.findById(usernameUppercase)
                 .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
-        if (user.getFavoriteMovies().contains(movieId)) {
+        if (!user.getFavoriteMovies().contains(movieId)) {
             throw new BadRequestException("Film: " + movieId + " is niet toegevoegd aan favorieten");
         } else {
             user.removeFavoriteMovie(movieId);
@@ -280,7 +280,7 @@ public class UserService {
         User user = userRepository.findById(usernameUppercase)
                 .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
-        if (user.getWatchlistMovies().contains(movieId)) {
+        if (!user.getWatchlistMovies().contains(movieId)) {
             throw new BadRequestException("Film: " + movieId + " is niet toegevoegd aan watchlist");
         } else {
             user.removeWatchlistMovie(movieId);
@@ -296,7 +296,7 @@ public class UserService {
         User user = userRepository.findById(usernameUppercase)
                 .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
-        if (user.getWatchedMovies().contains(movieId)) {
+        if (!user.getWatchedMovies().contains(movieId)) {
             throw new BadRequestException("Film: " + movieId + " is niet toegevoegd aan al gezien");
         } else {
             user.removeWatchedMovie(movieId);
@@ -361,7 +361,7 @@ public class UserService {
         User user = userRepository.findById(usernameUppercase)
                 .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
-        if (user.getFavoriteSeries().contains(seriesId)) {
+        if (!user.getFavoriteSeries().contains(seriesId)) {
             throw new BadRequestException("Serie: " + seriesId + " is niet toegevoegd aan favorieten");
         } else {
             user.removeFavoriteSeries(seriesId);
@@ -377,7 +377,7 @@ public class UserService {
         User user = userRepository.findById(usernameUppercase)
                 .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
-        if (user.getWatchlistSeries().contains(seriesId)) {
+        if (!user.getWatchlistSeries().contains(seriesId)) {
             throw new BadRequestException("Serie: " + seriesId + " is niet toegevoegd aan watchlist");
         } else {
             user.removeWatchlistSeries(seriesId);
@@ -393,7 +393,7 @@ public class UserService {
         User user = userRepository.findById(usernameUppercase)
                 .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
-        if (user.getWatchedSeries().contains(seriesId)) {
+        if (!user.getWatchedSeries().contains(seriesId)) {
             throw new BadRequestException("Serie: " + seriesId + " is niet toegevoegd aan al gezien");
         } else {
             user.removeWatchedSeries(seriesId);
