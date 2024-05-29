@@ -136,8 +136,8 @@ public class UserController {
     }
 
     // ADMIN -- Movie Requests
-    @PutMapping("/{username}/movies")
-    public ResponseEntity<Object> assignMovieIdToUser(
+    @PutMapping("/{username}/movies/favorites")
+    public ResponseEntity<Object> assignFavoriteMovieToUser(
             @PathVariable("username") String username,
             @Valid
             @RequestBody IdInputDto inputDto,
@@ -146,14 +146,14 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.assignMovieIdToUser(username, inputDto.getId());
+            UserDto dto = userService.assignFavoriteMovieToUser(username, inputDto.getId());
 
             return ResponseEntity.ok().body(dto);
         }
     }
 
-    @DeleteMapping("/{username}/movies")
-    public ResponseEntity<Object> removeMovieIdFromUser(
+    @PutMapping("/{username}/movies/watchlist")
+    public ResponseEntity<Object> assignWatchlistMovieToUser(
             @PathVariable("username") String username,
             @Valid
             @RequestBody IdInputDto inputDto,
@@ -162,15 +162,79 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.removeMovieIdFromUser(username, inputDto.getId());
+            UserDto dto = userService.assignWatchlistMovieToUser(username, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @PutMapping("/{username}/movies/watched")
+    public ResponseEntity<Object> assignWatchedMovieToUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.assignWatchedMovieToUser(username, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/{username}/movies/favorites")
+    public ResponseEntity<Object> removeFavoriteMovieFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeFavoriteMovieFromUser(username, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/{username}/movies/watchlist")
+    public ResponseEntity<Object> removeWatchlistMovieFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeWatchlistMovieFromUser(username, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/{username}/movies/watched")
+    public ResponseEntity<Object> removeWatchedMovieFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeWatchedMovieFromUser(username, inputDto.getId());
 
             return ResponseEntity.ok().body(dto);
         }
     }
 
     // ADMIN -- Series Requests
-    @PutMapping("/{username}/series")
-    public ResponseEntity<Object> assignSeriesIdToUser(
+    @PutMapping("/{username}/series/favorites")
+    public ResponseEntity<Object> assignFavoriteSeriesToUser(
             @PathVariable("username") String username,
             @Valid
             @RequestBody IdInputDto inputDto,
@@ -179,14 +243,14 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.assignSeriesIdToUser(username, inputDto.getId());
+            UserDto dto = userService.assignFavoriteSeriesToUser(username, inputDto.getId());
 
             return ResponseEntity.ok().body(dto);
         }
     }
 
-    @DeleteMapping("/{username}/series")
-    public ResponseEntity<Object> removeSeriesIdFromUser(
+    @PutMapping("/{username}/series/watchlist")
+    public ResponseEntity<Object> assignWatchlistSeriesToUser(
             @PathVariable("username") String username,
             @Valid
             @RequestBody IdInputDto inputDto,
@@ -195,7 +259,71 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.removeSeriesIdFromUser(username, inputDto.getId());
+            UserDto dto = userService.assignWatchlistSeriesToUser(username, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @PutMapping("/{username}/series/watched")
+    public ResponseEntity<Object> assignWatchedSeriesToUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.assignWatchedSeriesToUser(username, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/{username}/series/favorites")
+    public ResponseEntity<Object> removeFavoriteSeriesFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeFavoriteSeriesFromUser(username, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/{username}/series/watchlist")
+    public ResponseEntity<Object> removeWatchlistSeriesFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeWatchlistSeriesFromUser(username, inputDto.getId());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/{username}/series/watched")
+    public ResponseEntity<Object> removeWatchedSeriesFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeWatchedSeriesFromUser(username, inputDto.getId());
 
             return ResponseEntity.ok().body(dto);
         }
@@ -217,8 +345,8 @@ public class UserController {
     }
 
     // USER (AUTH) -- Movies Requests
-    @PutMapping("/auth/{username}/movies")
-    public ResponseEntity<Object> assignMovieIdToAuthUser(
+    @PutMapping("/auth/{username}/movies/favorites")
+    public ResponseEntity<Object> assignFavoriteMovieToAuthUser(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @Valid
@@ -229,7 +357,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.assignMovieIdToUser(username, inputDto.getId());
+                UserDto dto = userService.assignFavoriteMovieToUser(username, inputDto.getId());
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -238,8 +366,8 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/auth/{username}/movies")
-    public ResponseEntity<Object> removeMovieIdFromAuthUser(
+    @PutMapping("/auth/{username}/movies/watchlist")
+    public ResponseEntity<Object> assignWatchlistMovieToAuthUser(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @Valid
@@ -250,7 +378,91 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.removeMovieIdFromUser(username, inputDto.getId());
+                UserDto dto = userService.assignWatchlistMovieToUser(username, inputDto.getId());
+
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @PutMapping("/auth/{username}/movies/watched")
+    public ResponseEntity<Object> assignWatchedMovieToAuthUser(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username.toUpperCase())) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                UserDto dto = userService.assignWatchedMovieToUser(username, inputDto.getId());
+
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @DeleteMapping("/auth/{username}/movies/favorites")
+    public ResponseEntity<Object> removeFavoriteMovieFromAuthUser(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username.toUpperCase())) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                UserDto dto = userService.removeFavoriteMovieFromUser(username, inputDto.getId());
+
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @DeleteMapping("/auth/{username}/movies/watchlist")
+    public ResponseEntity<Object> removeWatchlistMovieFromAuthUser(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username.toUpperCase())) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                UserDto dto = userService.removeWatchlistMovieFromUser(username, inputDto.getId());
+
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @DeleteMapping("/auth/{username}/movies/watched")
+    public ResponseEntity<Object> removeWatchedMovieFromAuthUser(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username.toUpperCase())) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                UserDto dto = userService.removeWatchedMovieFromUser(username, inputDto.getId());
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -260,8 +472,8 @@ public class UserController {
     }
 
     // USER (AUTH) -- Series Requests
-    @PutMapping("/auth/{username}/series")
-    public ResponseEntity<Object> assignSeriesIdToAuthUser(
+    @PutMapping("/auth/{username}/series/favorites")
+    public ResponseEntity<Object> assignFavoriteSeriesToAuthUser(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @Valid
@@ -272,7 +484,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.assignSeriesIdToUser(username, inputDto.getId());
+                UserDto dto = userService.assignFavoriteSeriesToUser(username, inputDto.getId());
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -281,8 +493,8 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/auth/{username}/series")
-    public ResponseEntity<Object> removeSeriesIdFromAuthUser(
+    @PutMapping("/auth/{username}/series/watchlist")
+    public ResponseEntity<Object> assignWatchlistSeriesToAuthUser(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("username") String username,
             @Valid
@@ -293,7 +505,91 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.removeSeriesIdFromUser(username, inputDto.getId());
+                UserDto dto = userService.assignWatchlistSeriesToUser(username, inputDto.getId());
+
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @PutMapping("/auth/{username}/series/watched")
+    public ResponseEntity<Object> assignWatchedSeriesToAuthUser(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username.toUpperCase())) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                UserDto dto = userService.assignWatchedSeriesToUser(username, inputDto.getId());
+
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @DeleteMapping("/auth/{username}/series/favorites")
+    public ResponseEntity<Object> removeFavoriteSeriesFromAuthUser(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username.toUpperCase())) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                UserDto dto = userService.removeFavoriteSeriesFromUser(username, inputDto.getId());
+
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @DeleteMapping("/auth/{username}/series/watchlist")
+    public ResponseEntity<Object> removeWatchlistSeriesFromAuthUser(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username.toUpperCase())) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                UserDto dto = userService.removeWatchlistSeriesFromUser(username, inputDto.getId());
+
+                return ResponseEntity.ok().body(dto);
+            }
+        } else {
+            throw new BadRequestException("Used token is not valid");
+        }
+    }
+
+    @DeleteMapping("/auth/{username}/series/watched")
+    public ResponseEntity<Object> removeWatchedSeriesFromAuthUser(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody IdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (Objects.equals(userDetails.getUsername(), username.toUpperCase())) {
+            if (bindingResult.hasFieldErrors()) {
+                throw new InvalidInputException(handleBindingResultError(bindingResult));
+            } else {
+                UserDto dto = userService.removeWatchedSeriesFromUser(username, inputDto.getId());
 
                 return ResponseEntity.ok().body(dto);
             }

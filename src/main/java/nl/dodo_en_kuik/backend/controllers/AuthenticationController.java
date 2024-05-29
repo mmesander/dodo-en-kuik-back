@@ -1,5 +1,6 @@
 package nl.dodo_en_kuik.backend.controllers;
 
+import nl.dodo_en_kuik.backend.exceptions.BadRequestException;
 import nl.dodo_en_kuik.backend.security.payload.AuthenticationRequest;
 import nl.dodo_en_kuik.backend.security.payload.AuthenticationResponse;
 import nl.dodo_en_kuik.backend.utils.JwtUtil;
@@ -43,7 +44,7 @@ public class AuthenticationController {
                     new UsernamePasswordAuthenticationToken(username, password)
             );
         } catch (BadCredentialsException exception) {
-            throw new Exception("Onjuiste gebruikersnaam en wachtwoord", exception);
+            throw new BadRequestException("Onjuiste gebruikersnaam en wachtwoord combinatie");
         }
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);

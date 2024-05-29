@@ -37,21 +37,53 @@ public class User {
 
     @ElementCollection
     @CollectionTable(
-            name = "user_movie_ids",
+            name = "user_favorite_movies",
             joinColumns = @JoinColumn(name = "username")
     )
     @Column(name = "movie_id")
-    private Set<Long> movieIds = new HashSet<>();
+    private Set<Long> favoriteMovies = new HashSet<>();
 
     @ElementCollection
     @CollectionTable(
-            name = "user_series_ids",
+            name = "user_watchlist_movies",
+            joinColumns = @JoinColumn(name = "username")
+    )
+    @Column(name = "movie_id")
+    private Set<Long> watchlistMovies = new HashSet<>();
+
+    @ElementCollection
+    @CollectionTable(
+            name = "user_watched_movies",
+            joinColumns = @JoinColumn(name = "username")
+    )
+    @Column(name = "movie_id")
+    private Set<Long> watchedMovies = new HashSet<>();
+
+    @ElementCollection
+    @CollectionTable(
+            name = "user_favorite_series",
             joinColumns = @JoinColumn(name = "username")
     )
     @Column(name = "series_id")
-    private Set<Long> seriesIds = new HashSet<>();
+    private Set<Long> favoriteSeries = new HashSet<>();
 
-    // Methods
+    @ElementCollection
+    @CollectionTable(
+            name = "user_watchlist_series",
+            joinColumns = @JoinColumn(name = "username")
+    )
+    @Column(name = "series_id")
+    private Set<Long> watchlistSeries = new HashSet<>();
+
+    @ElementCollection
+    @CollectionTable(
+            name = "user_watched_series",
+            joinColumns = @JoinColumn(name = "username")
+    )
+    @Column(name = "series_id")
+    private Set<Long> watchedSeries = new HashSet<>();
+
+    // Authority Methods
     public void addAuthority(Authority authority) {
         this.authorities.add(authority);
     }
@@ -60,19 +92,53 @@ public class User {
         this.authorities.remove(authority);
     }
 
-    public void addMovieId(Long movieId) {
-        this.movieIds.add(movieId);
+    // Movie Methods
+    public void addFavoriteMovie(Long favoriteMovie) {
+        this.favoriteMovies.add(favoriteMovie);
     }
 
-    public void removeMovieId(Long movieId) {
-        this.movieIds.remove(movieId);
+    public void addWatchlistMovie(Long watchlistMovie) {
+        this.watchlistMovies.add(watchlistMovie);
     }
 
-    public void addSeriesId(Long seriesId) {
-        this.seriesIds.add(seriesId);
+    public void addWatchedMovie(Long watchedMovie) {
+        this.watchedMovies.add(watchedMovie);
     }
 
-    public void removeSeriesId(Long seriesId) {
-        this.seriesIds.remove(seriesId);
+    public void removeFavoriteMovie(Long favoriteMovie) {
+        this.favoriteMovies.remove(favoriteMovie);
+    }
+
+    public void removeWatchlistMovie(Long watchlistMovie) {
+        this.watchlistMovies.remove(watchlistMovie);
+    }
+
+    public void removeWatchedMovie(Long watchedMovie) {
+        this.watchedMovies.remove(watchedMovie);
+    }
+
+    // Series Methods
+    public void addFavoriteSeries(Long favoriteSeries) {
+        this.favoriteSeries.add(favoriteSeries);
+    }
+
+    public void addWatchlistSeries(Long watchlistSeries) {
+        this.watchlistSeries.add(watchlistSeries);
+    }
+
+    public void addWatchedSeries(Long watchedSeries) {
+        this.watchedSeries.add(watchedSeries);
+    }
+
+    public void removeFavoriteSeries(Long favoriteSeries) {
+        this.favoriteSeries.remove(favoriteSeries);
+    }
+
+    public void removeWatchlistSeries(Long watchlistSeries) {
+        this.watchlistSeries.remove(watchlistSeries);
+    }
+
+    public void removeWatchedSeries(Long watchedSeries) {
+        this.watchedSeries.remove(watchedSeries);
     }
 }
