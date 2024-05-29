@@ -258,7 +258,7 @@ public class UserService {
         return userToDto(user);
     }
 
-    public UserDto removeFavoriteMovieToUser(String username, Long movieId) {
+    public UserDto removeFavoriteMovieFromUser(String username, Long movieId) {
         String usernameUppercase = username.toUpperCase();
 
         User user = userRepository.findById(usernameUppercase)
@@ -274,7 +274,7 @@ public class UserService {
         return userToDto(user);
     }
 
-    public UserDto removeWatchlistMovieToUser(String username, Long movieId) {
+    public UserDto removeWatchlistMovieFromUser(String username, Long movieId) {
         String usernameUppercase = username.toUpperCase();
 
         User user = userRepository.findById(usernameUppercase)
@@ -290,7 +290,7 @@ public class UserService {
         return userToDto(user);
     }
 
-    public UserDto removeWatchedMovieToUser(String username, Long movieId) {
+    public UserDto removeWatchedMovieFromUser(String username, Long movieId) {
         String usernameUppercase = username.toUpperCase();
 
         User user = userRepository.findById(usernameUppercase)
@@ -355,7 +355,7 @@ public class UserService {
         return userToDto(user);
     }
 
-    public UserDto removeFavoriteSeriesToUser(String username, Long seriesId) {
+    public UserDto removeFavoriteSeriesFromUser(String username, Long seriesId) {
         String usernameUppercase = username.toUpperCase();
 
         User user = userRepository.findById(usernameUppercase)
@@ -371,7 +371,7 @@ public class UserService {
         return userToDto(user);
     }
 
-    public UserDto removeWatchlistSeriesToUser(String username, Long seriesId) {
+    public UserDto removeWatchlistSeriesFromUser(String username, Long seriesId) {
         String usernameUppercase = username.toUpperCase();
 
         User user = userRepository.findById(usernameUppercase)
@@ -387,7 +387,7 @@ public class UserService {
         return userToDto(user);
     }
 
-    public UserDto removeWatchedSeriesToUser(String username, Long seriesId) {
+    public UserDto removeWatchedSeriesFromUser(String username, Long seriesId) {
         String usernameUppercase = username.toUpperCase();
 
         User user = userRepository.findById(usernameUppercase)
