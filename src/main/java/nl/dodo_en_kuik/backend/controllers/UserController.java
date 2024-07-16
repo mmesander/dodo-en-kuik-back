@@ -146,7 +146,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.assignMovieIdToUser(username, inputDto.getId(), "favorite");
+            UserDto dto = userService.assignIdToSpecificUserList(username, inputDto.getId(), "favorites", true);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -162,7 +162,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.assignMovieIdToUser(username, inputDto.getId(), "watchlist");
+            UserDto dto = userService.assignIdToSpecificUserList(username, inputDto.getId(), "watchlist", true);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -178,7 +178,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.assignMovieIdToUser(username, inputDto.getId(), "watched");
+            UserDto dto = userService.assignIdToSpecificUserList(username, inputDto.getId(), "watched", true);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -243,7 +243,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.assignFavoriteSeriesToUser(username, inputDto.getId());
+            UserDto dto = userService.assignIdToSpecificUserList(username, inputDto.getId(), "favorites", false);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -259,7 +259,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.assignWatchlistSeriesToUser(username, inputDto.getId());
+            UserDto dto = userService.assignIdToSpecificUserList(username, inputDto.getId(), "watchlist", false);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -275,7 +275,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.assignWatchedSeriesToUser(username, inputDto.getId());
+            UserDto dto = userService.assignIdToSpecificUserList(username, inputDto.getId(), "watched", false);
 
             return ResponseEntity.ok().body(dto);
         }

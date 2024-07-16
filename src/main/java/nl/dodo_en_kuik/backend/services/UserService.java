@@ -222,7 +222,7 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
         switch (list) {
-            case "favorite":
+            case "favorites":
                 if (isMovie) {
                     if (user.getFavoriteMovies().contains(id)) {
                         throw new BadRequestException("Film: " + id + " is al toegevoegd aan favorieten");
