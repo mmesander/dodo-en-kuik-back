@@ -5,6 +5,7 @@ package nl.dodo_en_kuik.backend.controllers;
 import jakarta.validation.Valid;
 import nl.dodo_en_kuik.backend.dtos.input.AuthorityInputDto;
 import nl.dodo_en_kuik.backend.dtos.input.IdInputDto;
+import nl.dodo_en_kuik.backend.dtos.input.MultipleIdInputDto;
 import nl.dodo_en_kuik.backend.dtos.input.UserInputDto;
 import nl.dodo_en_kuik.backend.dtos.output.UserDto;
 import nl.dodo_en_kuik.backend.exceptions.BadRequestException;
@@ -146,7 +147,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.assignFavoriteMovieToUser(username, inputDto.getId());
+            UserDto dto = userService.assignIdToSpecificUserList(username, inputDto.getId(), "favorites", true);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -162,7 +163,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.assignWatchlistMovieToUser(username, inputDto.getId());
+            UserDto dto = userService.assignIdToSpecificUserList(username, inputDto.getId(), "watchlist", true);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -178,7 +179,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.assignWatchedMovieToUser(username, inputDto.getId());
+            UserDto dto = userService.assignIdToSpecificUserList(username, inputDto.getId(), "watched", true);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -194,7 +195,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.removeFavoriteMovieFromUser(username, inputDto.getId());
+            UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "favorites", true);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -210,7 +211,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.removeWatchlistMovieFromUser(username, inputDto.getId());
+            UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "watchlist", true);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -226,13 +227,13 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.removeWatchedMovieFromUser(username, inputDto.getId());
+            UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "watched", true);
 
             return ResponseEntity.ok().body(dto);
         }
     }
 
-    // ADMIN -- Series Requests
+    // ADMIN -- Single Series Requests
     @PutMapping("/{username}/series/favorites")
     public ResponseEntity<Object> assignFavoriteSeriesToUser(
             @PathVariable("username") String username,
@@ -243,7 +244,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.assignFavoriteSeriesToUser(username, inputDto.getId());
+            UserDto dto = userService.assignIdToSpecificUserList(username, inputDto.getId(), "favorites", false);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -259,7 +260,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.assignWatchlistSeriesToUser(username, inputDto.getId());
+            UserDto dto = userService.assignIdToSpecificUserList(username, inputDto.getId(), "watchlist", false);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -275,7 +276,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.assignWatchedSeriesToUser(username, inputDto.getId());
+            UserDto dto = userService.assignIdToSpecificUserList(username, inputDto.getId(), "watched", false);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -291,7 +292,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.removeFavoriteSeriesFromUser(username, inputDto.getId());
+            UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "favorites", false);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -307,7 +308,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.removeWatchlistSeriesFromUser(username, inputDto.getId());
+            UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "watchlist", false);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -323,7 +324,225 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.removeWatchedSeriesFromUser(username, inputDto.getId());
+            UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "watched", false);
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    // ADMIN -- Multiple Movie Requests
+    @PutMapping("/{username}/movies/favorites-list")
+    public ResponseEntity<Object> assignMultipleFavoriteMoviesToUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+            ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.assignMultipleIdsToSpecificUserList(
+                    username, inputDto.getIds(), "favorites", true
+            );
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @PutMapping("/{username}/movies/watchlist-list")
+    public ResponseEntity<Object> assignMultipleWatchlistMoviesToUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.assignMultipleIdsToSpecificUserList(
+                    username, inputDto.getIds(), "watchlist", true
+            );
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @PutMapping("/{username}/movies/watched-list")
+    public ResponseEntity<Object> assignMultipleWatchedMoviesToUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.assignMultipleIdsToSpecificUserList(
+                    username, inputDto.getIds(), "watched", true
+            );
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/{username}/movies/favorites-list")
+    public ResponseEntity<Object> removeMultipleFavoriteMoviesFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeMultipleIdsFromSpecificUserList(
+                    username, inputDto.getIds(), "favorites", true
+            );
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/{username}/movies/watchlist-list")
+    public ResponseEntity<Object> removeMultipleWatchlistMoviesFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeMultipleIdsFromSpecificUserList(
+                    username, inputDto.getIds(), "watchlist", true
+            );
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/{username}/movies/watched-list")
+    public ResponseEntity<Object> removeMultipleWatchedMoviesFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeMultipleIdsFromSpecificUserList(
+                    username, inputDto.getIds(), "watched", true
+            );
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    // ADMIN -- Multiple Series Requests
+    @PutMapping("/{username}/series/favorites-list")
+    public ResponseEntity<Object> assignMultipleFavoriteSeriesToUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.assignMultipleIdsToSpecificUserList(
+                    username, inputDto.getIds(), "favorites", false
+            );
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @PutMapping("/{username}/series/watchlist-list")
+    public ResponseEntity<Object> assignMultipleWatchlistSeriesToUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.assignMultipleIdsToSpecificUserList(
+                    username, inputDto.getIds(), "watchlist", false
+            );
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @PutMapping("/{username}/series/watched-list")
+    public ResponseEntity<Object> assignMultipleWatchedSeriesToUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.assignMultipleIdsToSpecificUserList(
+                    username, inputDto.getIds(), "watched", false
+            );
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/{username}/series/favorites-list")
+    public ResponseEntity<Object> removeMultipleFavoriteSeriesFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeMultipleIdsFromSpecificUserList(
+                    username, inputDto.getIds(), "favorites", false
+            );
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/{username}/series/watchlist-list")
+    public ResponseEntity<Object> removeMultipleWatchlistSeriesFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeMultipleIdsFromSpecificUserList(
+                    username, inputDto.getIds(), "watchlist", false
+            );
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/{username}/series/watched-list")
+    public ResponseEntity<Object> removeMultipleWatchedSeriesFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeMultipleIdsFromSpecificUserList(
+                    username, inputDto.getIds(), "watched", false
+            );
 
             return ResponseEntity.ok().body(dto);
         }
@@ -357,7 +576,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.assignFavoriteMovieToUser(username, inputDto.getId());
+                UserDto dto = userService.assignIdToSpecificUserList(username, inputDto.getId(), "favorites", true);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -378,7 +597,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.assignWatchlistMovieToUser(username, inputDto.getId());
+                UserDto dto = userService.assignIdToSpecificUserList(username, inputDto.getId(), "watchlist", true);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -399,7 +618,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.assignWatchedMovieToUser(username, inputDto.getId());
+                UserDto dto = userService.assignIdToSpecificUserList(username, inputDto.getId(), "watched", true);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -420,7 +639,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.removeFavoriteMovieFromUser(username, inputDto.getId());
+                UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "favorites", true);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -441,7 +660,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.removeWatchlistMovieFromUser(username, inputDto.getId());
+                UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "watchlist", true);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -462,7 +681,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.removeWatchedMovieFromUser(username, inputDto.getId());
+                UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "watched", true);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -484,7 +703,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.assignFavoriteSeriesToUser(username, inputDto.getId());
+                UserDto dto = userService.assignIdToSpecificUserList(username, inputDto.getId(), "favorites", false);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -505,7 +724,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.assignWatchlistSeriesToUser(username, inputDto.getId());
+                UserDto dto = userService.assignIdToSpecificUserList(username, inputDto.getId(), "watchlist", false);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -526,7 +745,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.assignWatchedSeriesToUser(username, inputDto.getId());
+                UserDto dto = userService.assignIdToSpecificUserList(username, inputDto.getId(), "watched", false);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -547,7 +766,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.removeFavoriteSeriesFromUser(username, inputDto.getId());
+                UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "favorites", false);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -568,7 +787,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.removeWatchlistSeriesFromUser(username, inputDto.getId());
+                UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "watchlist", false);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -589,7 +808,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.removeWatchedSeriesFromUser(username, inputDto.getId());
+                UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "watched", false);
 
                 return ResponseEntity.ok().body(dto);
             }

@@ -209,194 +209,349 @@ public class UserService {
         }
     }
 
-    // Relation - Movies Methods
-    public UserDto assignFavoriteMovieToUser(String username, Long movieId) {
+    // Relation - Single Movie/Series Methods
+    public UserDto assignIdToSpecificUserList(String username, Long id, String list, boolean isMovie) {
+        if (list == null || list.isEmpty()) {
+            throw new IllegalArgumentException("Lijstnaam mag niet null of leeg zijn");
+        }
+
         String usernameUppercase = username.toUpperCase();
+        boolean isUpdated = false;
 
         User user = userRepository.findById(usernameUppercase)
                 .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
-        if (user.getFavoriteMovies().contains(movieId)) {
-            throw new BadRequestException("Film: " + movieId + " is al toegevoegd aan favorieten");
-        } else {
-            user.addFavoriteMovie(movieId);
+        switch (list) {
+            case "favorites":
+                if (isMovie) {
+                    if (user.getFavoriteMovies().contains(id)) {
+                        throw new BadRequestException("Film: " + id + " is al toegevoegd aan favorieten");
+                    } else {
+                        user.addFavoriteMovie(id);
+                        isUpdated = true;
+                    }
+                } else {
+                    if (user.getFavoriteSeries().contains(id)) {
+                        throw new BadRequestException("Serie: " + id + " is al toegevoegd aan favorieten");
+                    } else {
+                        user.addFavoriteSeries(id);
+                        isUpdated = true;
+                    }
+                }
+                break;
+            case "watchlist":
+                if (isMovie) {
+                    if (user.getWatchlistMovies().contains(id)) {
+                        throw new BadRequestException("Film: " + id + " is al toegevoegd aan watchlist");
+                    } else {
+                        user.addWatchlistMovie(id);
+                        isUpdated = true;
+                    }
+                } else {
+                    if (user.getWatchlistSeries().contains(id)) {
+                        throw new BadRequestException("Serie: " + id + " is al toegevoegd aan watchlist");
+                    } else {
+                        user.addWatchlistSeries(id);
+                        isUpdated = true;
+                    }
+                }
+                break;
+            case "watched":
+                if (isMovie) {
+                    if (user.getWatchedMovies().contains(id)) {
+                        throw new BadRequestException("Film: " + id + " is al toegevoegd aan al gezien");
+                    } else {
+                        user.addWatchedMovie(id);
+                        isUpdated = true;
+                    }
+                } else {
+                    if (user.getWatchedSeries().contains(id)) {
+                        throw new BadRequestException("Serie: " + id + " is al toegevoegd aan al gezien");
+                    } else {
+                        user.addWatchedSeries(id);
+                        isUpdated = true;
+                    }
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Ongeldige lijstnaam: " + list);
+        }
+
+        if (isUpdated) {
             userRepository.save(user);
         }
 
         return userToDto(user);
     }
 
-    public UserDto assignWatchlistMovieToUser(String username, Long movieId) {
+    public UserDto removeIdFromSpecificUserList(String username, Long id, String list, boolean isMovie) {
+        if (list == null || list.isEmpty()) {
+            throw new IllegalArgumentException("Lijstnaam mag niet null of leeg zijn");
+        }
+
         String usernameUppercase = username.toUpperCase();
+        boolean isUpdated = false;
 
         User user = userRepository.findById(usernameUppercase)
                 .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
-        if (user.getWatchlistMovies().contains(movieId)) {
-            throw new BadRequestException("Film: " + movieId + " is al toegevoegd aan watchlist");
-        } else {
-            user.addWatchlistMovie(movieId);
+        switch (list) {
+            case "favorites":
+                if (isMovie) {
+                    if (!user.getFavoriteMovies().contains(id)) {
+                        throw new BadRequestException("Film: " + id + " is niet toegevoegd aan favorieten");
+                    } else {
+                        user.removeFavoriteMovie(id);
+                        isUpdated = true;
+                    }
+                } else {
+                    if (!user.getFavoriteSeries().contains(id)) {
+                        throw new BadRequestException("Serie: " + id + " is niet toegevoegd aan favorieten");
+                    } else {
+                        user.removeFavoriteSeries(id);
+                        isUpdated = true;
+                    }
+                }
+                break;
+            case "watchlist":
+                if (isMovie) {
+                    if (!user.getWatchlistMovies().contains(id)) {
+                        throw new BadRequestException("Film: " + id + " is niet toegevoegd aan watchlist");
+                    } else {
+                        user.removeWatchlistMovie(id);
+                        isUpdated = true;
+                    }
+                } else {
+                    if (!user.getWatchlistSeries().contains(id)) {
+                        throw new BadRequestException("Serie: " + id + " is niet toegevoegd aan watchlist");
+                    } else {
+                        user.removeWatchlistSeries(id);
+                        isUpdated = true;
+                    }
+                }
+                break;
+            case "watched":
+                if (isMovie) {
+                    if (!user.getWatchedMovies().contains(id)) {
+                        throw new BadRequestException("Film: " + id + " is niet toegevoegd aan al gezien");
+                    } else {
+                        user.removeWatchedMovie(id);
+                        isUpdated = true;
+                    }
+                } else {
+                    if (!user.getWatchedSeries().contains(id)) {
+                        throw new BadRequestException("Serie: " + id + " is niet toegevoegd aan al gezien");
+                    } else {
+                        user.removeWatchedSeries(id);
+                        isUpdated = true;
+                    }
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Ongeldige lijstnaam: " + list);
+        }
+
+        if (isUpdated) {
             userRepository.save(user);
         }
 
         return userToDto(user);
     }
 
-    public UserDto assignWatchedMovieToUser(String username, Long movieId) {
+    // Relation - Multiple Movie/Series Methods
+    public UserDto assignMultipleIdsToSpecificUserList(String username, List<Long> ids, String list, boolean isMovie) {
+        if (list == null || list.isEmpty()) {
+            throw new IllegalArgumentException("Lijstnaam mag niet null of leeg zijn");
+        }
+
         String usernameUppercase = username.toUpperCase();
 
         User user = userRepository.findById(usernameUppercase)
                 .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
-        if (user.getWatchedMovies().contains(movieId)) {
-            throw new BadRequestException("Film: " + movieId + " is al toegevoegd aan al gezien");
-        } else {
-            user.addWatchedMovie(movieId);
+        boolean isUpdated = false;
+        List<Long> newIds = new ArrayList<>();
+
+        switch (list) {
+            case "favorites":
+                if (isMovie) {
+                    for (Long id : ids) {
+                        if (user.getFavoriteMovies().contains(id)) {
+                            throw new BadRequestException("Film: " + id + " is al toegevoegd aan favorieten");
+                        } else {
+                            newIds.add(id);
+                        }
+                    }
+
+                    if (!newIds.isEmpty()) {
+                        user.getFavoriteMovies().addAll(newIds);
+                        isUpdated = true;
+                    }
+                } else {
+                    for (Long id : ids) {
+                        if (user.getFavoriteSeries().contains(id)) {
+                            throw new BadRequestException("Serie: " + id + " is al toegevoegd aan favorieten");
+                        } else {
+                            newIds.add(id);
+                        }
+                    }
+
+                    if (!newIds.isEmpty()) {
+                        user.getFavoriteSeries().addAll(newIds);
+                        isUpdated = true;
+                    }
+                }
+                break;
+            case "watchlist":
+                if (isMovie) {
+                    for (Long id : ids) {
+                        if (user.getWatchlistMovies().contains(id)) {
+                            throw new BadRequestException("Film: " + id + " is al toegevoegd aan watchlist");
+                        } else {
+                            newIds.add(id);
+                        }
+                    }
+
+                    if (!newIds.isEmpty()) {
+                        user.getWatchlistMovies().addAll(newIds);
+                        isUpdated = true;
+                    }
+                } else {
+                    for (Long id : ids) {
+                        if (user.getWatchlistSeries().contains(id)) {
+                            throw new BadRequestException("Serie: " + id + " is al toegevoegd aan watchlist");
+                        } else {
+                            newIds.add(id);
+                        }
+                    }
+
+                    if (!newIds.isEmpty()) {
+                        user.getWatchlistSeries().addAll(newIds);
+                        isUpdated = true;
+                    }
+                }
+                break;
+            case "watched":
+                if (isMovie) {
+                    for (Long id : ids) {
+                        if (user.getWatchedMovies().contains(id)) {
+                            throw new BadRequestException("Film: " + id + " is al toegevoegd aan al gezien");
+                        } else {
+                            newIds.add(id);
+                        }
+                    }
+
+                    if (!newIds.isEmpty()) {
+                        user.getWatchedMovies().addAll(newIds);
+                        isUpdated = true;
+                    }
+                } else {
+                    for (Long id : ids) {
+                        if (user.getWatchedSeries().contains(id)) {
+                            throw new BadRequestException("Serie: " + id + " is al toegevoegd aan al gezien");
+                        } else {
+                            newIds.add(id);
+                        }
+                    }
+
+                    if (!newIds.isEmpty()) {
+                        user.getWatchedSeries().addAll(newIds);
+                        isUpdated = true;
+                    }
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Ongeldige lijstnaam: " + list);
+        }
+
+        if (isUpdated) {
             userRepository.save(user);
         }
 
         return userToDto(user);
     }
 
-    public UserDto removeFavoriteMovieFromUser(String username, Long movieId) {
-        String usernameUppercase = username.toUpperCase();
-
-        User user = userRepository.findById(usernameUppercase)
-                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
-
-        if (!user.getFavoriteMovies().contains(movieId)) {
-            throw new BadRequestException("Film: " + movieId + " is niet toegevoegd aan favorieten");
-        } else {
-            user.removeFavoriteMovie(movieId);
-            userRepository.save(user);
+    public UserDto removeMultipleIdsFromSpecificUserList(String username, List<Long> ids, String list, boolean isMovie) {
+        if (list == null || list.isEmpty()) {
+            throw new IllegalArgumentException("Lijstnaam mag niet null of leeg zijn");
         }
 
-        return userToDto(user);
-    }
-
-    public UserDto removeWatchlistMovieFromUser(String username, Long movieId) {
         String usernameUppercase = username.toUpperCase();
 
         User user = userRepository.findById(usernameUppercase)
                 .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
-        if (!user.getWatchlistMovies().contains(movieId)) {
-            throw new BadRequestException("Film: " + movieId + " is niet toegevoegd aan watchlist");
-        } else {
-            user.removeWatchlistMovie(movieId);
-            userRepository.save(user);
+        boolean isUpdated = false;
+
+        switch (list) {
+            case "favorites":
+                if (isMovie) {
+                    for (Long id : ids) {
+                        if (!user.getFavoriteMovies().contains(id)) {
+                            throw new BadRequestException("Film: " + id + " is niet toegevoegd aan favorieten");
+                        } else {
+                            user.removeFavoriteMovie(id);
+                            isUpdated = true;
+                        }
+                    }
+                } else {
+                    for (Long id : ids) {
+                        if (!user.getFavoriteSeries().contains(id)) {
+                            throw new BadRequestException("Serie: " + id + " is niet toegevoegd aan favorieten");
+                        } else {
+                            user.removeFavoriteSeries(id);
+                            isUpdated = true;
+                        }
+                    }
+                }
+                break;
+            case "watchlist":
+                if (isMovie) {
+                    for (Long id : ids) {
+                        if (!user.getWatchlistMovies().contains(id)) {
+                            throw new BadRequestException("Film: " + id + " is niet toegevoegd aan watchlist");
+                        } else {
+                            user.removeWatchlistMovie(id);
+                            isUpdated = true;
+                        }
+                    }
+                } else {
+                    for (Long id : ids) {
+                        if (!user.getWatchlistSeries().contains(id)) {
+                            throw new BadRequestException("Serie: " + id + " is niet toegevoegd aan watchlist");
+                        } else {
+                            user.removeWatchlistSeries(id);
+                            isUpdated = true;
+                        }
+                    }
+                }
+                break;
+            case "watched":
+                if (isMovie) {
+                    for (Long id : ids) {
+                        if (!user.getWatchedMovies().contains(id)) {
+                            throw new BadRequestException("Film: " + id + " is niet toegevoegd aan al gezien");
+                        } else {
+                            user.removeWatchedMovie(id);
+                            isUpdated = true;
+                        }
+                    }
+                } else {
+                    for (Long id : ids) {
+                        if (!user.getWatchedSeries().contains(id)) {
+                            throw new BadRequestException("Serie: " + id + " is niet toegevoegd aan al gezien");
+                        } else {
+                            user.removeWatchedSeries(id);
+                            isUpdated = true;
+                        }
+                    }
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Ongeldige lijstnaam: " + list);
         }
 
-        return userToDto(user);
-    }
-
-    public UserDto removeWatchedMovieFromUser(String username, Long movieId) {
-        String usernameUppercase = username.toUpperCase();
-
-        User user = userRepository.findById(usernameUppercase)
-                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
-
-        if (!user.getWatchedMovies().contains(movieId)) {
-            throw new BadRequestException("Film: " + movieId + " is niet toegevoegd aan al gezien");
-        } else {
-            user.removeWatchedMovie(movieId);
-            userRepository.save(user);
-        }
-
-        return userToDto(user);
-    }
-
-    // Relation - Series Methods
-    public UserDto assignFavoriteSeriesToUser(String username, Long seriesId) {
-        String usernameUppercase = username.toUpperCase();
-
-        User user = userRepository.findById(usernameUppercase)
-                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
-
-        if (user.getFavoriteSeries().contains(seriesId)) {
-            throw new BadRequestException("Serie: " + seriesId + " is al toegevoegd aan favorieten");
-        } else {
-            user.addFavoriteSeries(seriesId);
-            userRepository.save(user);
-        }
-
-        return userToDto(user);
-    }
-
-    public UserDto assignWatchlistSeriesToUser(String username, Long seriesId) {
-        String usernameUppercase = username.toUpperCase();
-
-        User user = userRepository.findById(usernameUppercase)
-                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
-
-        if (user.getWatchlistSeries().contains(seriesId)) {
-            throw new BadRequestException("Serie: " + seriesId + " is al toegevoegd aan watchlist");
-        } else {
-            user.addWatchlistSeries(seriesId);
-            userRepository.save(user);
-        }
-
-        return userToDto(user);
-    }
-
-    public UserDto assignWatchedSeriesToUser(String username, Long seriesId) {
-        String usernameUppercase = username.toUpperCase();
-
-        User user = userRepository.findById(usernameUppercase)
-                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
-
-        if (user.getWatchedSeries().contains(seriesId)) {
-            throw new BadRequestException("Serie: " + seriesId + " is al toegevoegd aan al gezien");
-        } else {
-            user.addWatchedSeries(seriesId);
-            userRepository.save(user);
-        }
-
-        return userToDto(user);
-    }
-
-    public UserDto removeFavoriteSeriesFromUser(String username, Long seriesId) {
-        String usernameUppercase = username.toUpperCase();
-
-        User user = userRepository.findById(usernameUppercase)
-                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
-
-        if (!user.getFavoriteSeries().contains(seriesId)) {
-            throw new BadRequestException("Serie: " + seriesId + " is niet toegevoegd aan favorieten");
-        } else {
-            user.removeFavoriteSeries(seriesId);
-            userRepository.save(user);
-        }
-
-        return userToDto(user);
-    }
-
-    public UserDto removeWatchlistSeriesFromUser(String username, Long seriesId) {
-        String usernameUppercase = username.toUpperCase();
-
-        User user = userRepository.findById(usernameUppercase)
-                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
-
-        if (!user.getWatchlistSeries().contains(seriesId)) {
-            throw new BadRequestException("Serie: " + seriesId + " is niet toegevoegd aan watchlist");
-        } else {
-            user.removeWatchlistSeries(seriesId);
-            userRepository.save(user);
-        }
-
-        return userToDto(user);
-    }
-
-    public UserDto removeWatchedSeriesFromUser(String username, Long seriesId) {
-        String usernameUppercase = username.toUpperCase();
-
-        User user = userRepository.findById(usernameUppercase)
-                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
-
-        if (!user.getWatchedSeries().contains(seriesId)) {
-            throw new BadRequestException("Serie: " + seriesId + " is niet toegevoegd aan al gezien");
-        } else {
-            user.removeWatchedSeries(seriesId);
+        if (isUpdated) {
             userRepository.save(user);
         }
 
