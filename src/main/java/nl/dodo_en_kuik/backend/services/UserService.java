@@ -471,26 +471,89 @@ public class UserService {
         return userToDto(user);
     }
 
+    public UserDto removeMultipleIdsFromSpecificUserList(String username, List<Long> ids, String list, boolean isMovie) {
+        if (list == null || list.isEmpty()) {
+            throw new IllegalArgumentException("Lijstnaam mag niet null of leeg zijn");
+        }
 
-    // Relation - Movies Methods - Multiple Movies
-    public UserDto assignMultipleFavoriteMoviesToUser(String username, List<Long> movieIds) {
         String usernameUppercase = username.toUpperCase();
 
         User user = userRepository.findById(usernameUppercase)
                 .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
 
-        List<Long> newMovieIds = new ArrayList<>();
+        boolean isUpdated = false;
 
-        for (Long movieId : movieIds) {
-            if (user.getFavoriteMovies().contains(movieId)) {
-                throw new BadRequestException("Film: " + movieId + " is al toegevoegd aan favorieten");
-            } else {
-                newMovieIds.add(movieId);
-            }
+        switch (list) {
+            case "favorites":
+                if (isMovie) {
+                    for (Long id : ids) {
+                        if (!user.getFavoriteMovies().contains(id)) {
+                            throw new BadRequestException("Film: " + id + " is niet toegevoegd aan favorieten");
+                        } else {
+                            user.removeFavoriteMovie(id);
+                            isUpdated = true;
+                        }
+                    }
+                } else {
+                    for (Long id : ids) {
+                        if (!user.getFavoriteSeries().contains(id)) {
+                            throw new BadRequestException("Serie: " + id + " is niet toegevoegd aan favorieten");
+                        } else {
+                            user.removeFavoriteSeries(id);
+                            isUpdated = true;
+                        }
+                    }
+                }
+                break;
+            case "watchlist":
+                if (isMovie) {
+                    for (Long id : ids) {
+                        if (!user.getWatchlistMovies().contains(id)) {
+                            throw new BadRequestException("Film: " + id + " is niet toegevoegd aan watchlist");
+                        } else {
+                            user.removeWatchlistMovie(id);
+                            isUpdated = true;
+                        }
+                    }
+                } else {
+                    for (Long id : ids) {
+                        if (!user.getWatchlistSeries().contains(id)) {
+                            throw new BadRequestException("Serie: " + id + " is niet toegevoegd aan watchlist");
+                        } else {
+                            user.removeWatchlistSeries(id);
+                            isUpdated = true;
+                        }
+                    }
+                }
+                break;
+            case "watched":
+                if (isMovie) {
+                    for (Long id : ids) {
+                        if (!user.getWatchedMovies().contains(id)) {
+                            throw new BadRequestException("Film: " + id + " is niet toegevoegd aan al gezien");
+                        } else {
+                            user.removeWatchedMovie(id);
+                            isUpdated = true;
+                        }
+                    }
+                } else {
+                    for (Long id : ids) {
+                        if (!user.getWatchedSeries().contains(id)) {
+                            throw new BadRequestException("Serie: " + id + " is niet toegevoegd aan al gezien");
+                        } else {
+                            user.removeWatchedSeries(id);
+                            isUpdated = true;
+                        }
+                    }
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Ongeldige lijstnaam: " + list);
         }
 
-        user.getFavoriteMovies().addAll(newMovieIds);
-        userRepository.save(user);
+        if (isUpdated) {
+            userRepository.save(user);
+        }
 
         return userToDto(user);
     }
