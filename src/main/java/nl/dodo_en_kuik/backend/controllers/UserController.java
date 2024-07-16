@@ -5,6 +5,7 @@ package nl.dodo_en_kuik.backend.controllers;
 import jakarta.validation.Valid;
 import nl.dodo_en_kuik.backend.dtos.input.AuthorityInputDto;
 import nl.dodo_en_kuik.backend.dtos.input.IdInputDto;
+import nl.dodo_en_kuik.backend.dtos.input.MultipleIdInputDto;
 import nl.dodo_en_kuik.backend.dtos.input.UserInputDto;
 import nl.dodo_en_kuik.backend.dtos.output.UserDto;
 import nl.dodo_en_kuik.backend.exceptions.BadRequestException;
@@ -330,12 +331,21 @@ public class UserController {
     }
 
     // ADMIN -- Multiple Movie Requests
-    @PutMapping("/{username}/movies/favorites")
-    public ResponseEntity<Object> assignFavoriteMoviesToUser(
+    @PutMapping("/{username}/movies/favorites-list")
+    public ResponseEntity<Object> assignMultipleFavoriteMoviesToUser(
             @PathVariable("username") String username,
             @Valid
-            @RequestBody
-    )
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+            ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.assignMultipleFavoriteMoviesToUser(username, inputDto.getIds());
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
 
     // USER (AUTH) -- CRUD Requests
     @GetMapping(value = "/auth/{username}")
