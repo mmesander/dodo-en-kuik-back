@@ -146,7 +146,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.assignFavoriteMovieToUser(username, inputDto.getId());
+            UserDto dto = userService.assignMovieIdToUser(username, inputDto.getId(), "favorite");
 
             return ResponseEntity.ok().body(dto);
         }
@@ -162,7 +162,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.assignWatchlistMovieToUser(username, inputDto.getId());
+            UserDto dto = userService.assignMovieIdToUser(username, inputDto.getId(), "watchlist");
 
             return ResponseEntity.ok().body(dto);
         }
@@ -178,7 +178,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.assignWatchedMovieToUser(username, inputDto.getId());
+            UserDto dto = userService.assignMovieIdToUser(username, inputDto.getId(), "watched");
 
             return ResponseEntity.ok().body(dto);
         }
@@ -357,7 +357,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.assignFavoriteMovieToUser(username, inputDto.getId());
+                UserDto dto = userService.assignMovieIdToUser(username, inputDto.getId(), "favorite");
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -378,7 +378,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.assignWatchlistMovieToUser(username, inputDto.getId());
+                UserDto dto = userService.assignMovieIdToUser(username, inputDto.getId(), "watchlist");
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -399,7 +399,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.assignWatchedMovieToUser(username, inputDto.getId());
+                UserDto dto = userService.assignMovieIdToUser(username, inputDto.getId(), "watched");
 
                 return ResponseEntity.ok().body(dto);
             }
