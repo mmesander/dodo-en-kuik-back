@@ -385,6 +385,60 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("/{username}/movies/favorites-list")
+    public ResponseEntity<Object> removeMultipleFavoriteMoviesFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeMultipleIdsFromSpecificUserList(
+                    username, inputDto.getIds(), "favorites", true
+            );
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/{username}/movies/watchlist-list")
+    public ResponseEntity<Object> removeMultipleWatchlistMoviesFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeMultipleIdsFromSpecificUserList(
+                    username, inputDto.getIds(), "watchlist", true
+            );
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/{username}/movies/watched-list")
+    public ResponseEntity<Object> removeMultipleWatchedMoviesFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeMultipleIdsFromSpecificUserList(
+                    username, inputDto.getIds(), "watched", true
+            );
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
     // ADMIN -- Multiple Series Requests
     @PutMapping("/{username}/series/favorites-list")
     public ResponseEntity<Object> assignMultipleFavoriteSeriesToUser(
@@ -433,6 +487,60 @@ public class UserController {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
             UserDto dto = userService.assignMultipleIdsToSpecificUserList(
+                    username, inputDto.getIds(), "watched", false
+            );
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/{username}/series/favorites-list")
+    public ResponseEntity<Object> removeMultipleFavoriteSeriesFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeMultipleIdsFromSpecificUserList(
+                    username, inputDto.getIds(), "favorites", false
+            );
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/{username}/series/watchlist-list")
+    public ResponseEntity<Object> removeMultipleWatchlistSeriesFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeMultipleIdsFromSpecificUserList(
+                    username, inputDto.getIds(), "watchlist", false
+            );
+
+            return ResponseEntity.ok().body(dto);
+        }
+    }
+
+    @DeleteMapping("/{username}/series/watched-list")
+    public ResponseEntity<Object> removeMultipleWatchedSeriesFromUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody MultipleIdInputDto inputDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasFieldErrors()) {
+            throw new InvalidInputException(handleBindingResultError(bindingResult));
+        } else {
+            UserDto dto = userService.removeMultipleIdsFromSpecificUserList(
                     username, inputDto.getIds(), "watched", false
             );
 
