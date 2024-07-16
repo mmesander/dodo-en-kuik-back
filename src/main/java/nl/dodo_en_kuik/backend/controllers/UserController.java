@@ -194,7 +194,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.removeFavoriteMovieFromUser(username, inputDto.getId());
+            UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "favorites", true);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -210,7 +210,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.removeWatchlistMovieFromUser(username, inputDto.getId());
+            UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "watchlist", true);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -226,13 +226,13 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.removeWatchedMovieFromUser(username, inputDto.getId());
+            UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "watched", true);
 
             return ResponseEntity.ok().body(dto);
         }
     }
 
-    // ADMIN -- Series Requests
+    // ADMIN -- Single Series Requests
     @PutMapping("/{username}/series/favorites")
     public ResponseEntity<Object> assignFavoriteSeriesToUser(
             @PathVariable("username") String username,
@@ -291,7 +291,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.removeFavoriteSeriesFromUser(username, inputDto.getId());
+            UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "favorites", false);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -307,7 +307,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.removeWatchlistSeriesFromUser(username, inputDto.getId());
+            UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "watchlist", false);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -323,7 +323,7 @@ public class UserController {
         if (bindingResult.hasFieldErrors()) {
             throw new InvalidInputException(handleBindingResultError(bindingResult));
         } else {
-            UserDto dto = userService.removeWatchedSeriesFromUser(username, inputDto.getId());
+            UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "watched", false);
 
             return ResponseEntity.ok().body(dto);
         }
@@ -420,7 +420,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.removeFavoriteMovieFromUser(username, inputDto.getId());
+                UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "favorites", true);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -441,7 +441,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.removeWatchlistMovieFromUser(username, inputDto.getId());
+                UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "watchlist", true);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -462,7 +462,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.removeWatchedMovieFromUser(username, inputDto.getId());
+                UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "watched", true);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -547,7 +547,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.removeFavoriteSeriesFromUser(username, inputDto.getId());
+                UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "favorites", false);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -568,7 +568,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.removeWatchlistSeriesFromUser(username, inputDto.getId());
+                UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "watchlist", false);
 
                 return ResponseEntity.ok().body(dto);
             }
@@ -589,7 +589,7 @@ public class UserController {
             if (bindingResult.hasFieldErrors()) {
                 throw new InvalidInputException(handleBindingResultError(bindingResult));
             } else {
-                UserDto dto = userService.removeWatchedSeriesFromUser(username, inputDto.getId());
+                UserDto dto = userService.removeIdFromSpecificUserList(username, inputDto.getId(), "watched", false);
 
                 return ResponseEntity.ok().body(dto);
             }
