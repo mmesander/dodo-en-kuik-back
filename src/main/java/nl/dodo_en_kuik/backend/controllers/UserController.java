@@ -329,6 +329,14 @@ public class UserController {
         }
     }
 
+    // ADMIN -- Multiple Movie Requests
+    @PutMapping("/{username}/movies/favorites")
+    public ResponseEntity<Object> assignFavoriteMoviesToUser(
+            @PathVariable("username") String username,
+            @Valid
+            @RequestBody
+    )
+
     // USER (AUTH) -- CRUD Requests
     @GetMapping(value = "/auth/{username}")
     public ResponseEntity<UserDto> getAuthUser(
