@@ -359,9 +359,117 @@ public class UserService {
     }
 
     // Relation - Multiple Movie/Series Methods
-//    public UserDto assignMultipleIdsToSpecificUserList (String username, List<Long> ids, String list, boolean isMovie) {
-//
-//    }
+    public UserDto assignMultipleIdsToSpecificUserList(String username, List<Long> ids, String list, boolean isMovie) {
+        if (list == null || list.isEmpty()) {
+            throw new IllegalArgumentException("Lijstnaam mag niet null of leeg zijn");
+        }
+
+        String usernameUppercase = username.toUpperCase();
+
+        User user = userRepository.findById(usernameUppercase)
+                .orElseThrow(() -> new UsernameNotFoundException(usernameUppercase));
+
+        boolean isUpdated = false;
+        List<Long> newIds = new ArrayList<>();
+
+        switch (list) {
+            case "favorites":
+                if (isMovie) {
+                    for (Long id : ids) {
+                        if (user.getFavoriteMovies().contains(id)) {
+                            throw new BadRequestException("Film: " + id + " is al toegevoegd aan favorieten");
+                        } else {
+                            newIds.add(id);
+                        }
+                    }
+
+                    if (!newIds.isEmpty()) {
+                        user.getFavoriteMovies().addAll(newIds);
+                        isUpdated = true;
+                    }
+                } else {
+                    for (Long id : ids) {
+                        if (user.getFavoriteSeries().contains(id)) {
+                            throw new BadRequestException("Serie: " + id + " is al toegevoegd aan favorieten");
+                        } else {
+                            newIds.add(id);
+                        }
+                    }
+
+                    if (!newIds.isEmpty()) {
+                        user.getFavoriteSeries().addAll(newIds);
+                        isUpdated = true;
+                    }
+                }
+                break;
+            case "watchlist":
+                if (isMovie) {
+                    for (Long id : ids) {
+                        if (user.getWatchlistMovies().contains(id)) {
+                            throw new BadRequestException("Film: " + id + " is al toegevoegd aan watchlist");
+                        } else {
+                            newIds.add(id);
+                        }
+                    }
+
+                    if (!newIds.isEmpty()) {
+                        user.getWatchlistMovies().addAll(newIds);
+                        isUpdated = true;
+                    }
+                } else {
+                    for (Long id : ids) {
+                        if (user.getWatchlistSeries().contains(id)) {
+                            throw new BadRequestException("Serie: " + id + " is al toegevoegd aan watchlist");
+                        } else {
+                            newIds.add(id);
+                        }
+                    }
+
+                    if (!newIds.isEmpty()) {
+                        user.getWatchlistSeries().addAll(newIds);
+                        isUpdated = true;
+                    }
+                }
+                break;
+            case "watched":
+                if (isMovie) {
+                    for (Long id : ids) {
+                        if (user.getWatchedMovies().contains(id)) {
+                            throw new BadRequestException("Film: " + id + " is al toegevoegd aan al gezien");
+                        } else {
+                            newIds.add(id);
+                        }
+                    }
+
+                    if (!newIds.isEmpty()) {
+                        user.getWatchedMovies().addAll(newIds);
+                        isUpdated = true;
+                    }
+                } else {
+                    for (Long id : ids) {
+                        if (user.getWatchedSeries().contains(id)) {
+                            throw new BadRequestException("Serie: " + id + " is al toegevoegd aan al gezien");
+                        } else {
+                            newIds.add(id);
+                        }
+                    }
+
+                    if (!newIds.isEmpty()) {
+                        user.getWatchedSeries().addAll(newIds);
+                        isUpdated = true;
+                    }
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Ongeldige lijstnaam: " + list);
+        }
+
+        if (isUpdated) {
+            userRepository.save(user);
+        }
+
+        return userToDto(user);
+    }
 
 
     // Relation - Movies Methods - Multiple Movies
@@ -386,6 +494,4 @@ public class UserService {
 
         return userToDto(user);
     }
-
-    // Relation - Movies Methods - Multiple Series
 }
