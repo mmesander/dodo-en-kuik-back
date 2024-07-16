@@ -135,7 +135,7 @@ public class UserController {
         }
     }
 
-    // ADMIN -- Movie Requests
+    // ADMIN -- Single Movie Requests
     @PutMapping("/{username}/movies/favorites")
     public ResponseEntity<Object> assignFavoriteMovieToUser(
             @PathVariable("username") String username,
